@@ -64,7 +64,6 @@ def voicecut_main():
             silence_thresh_db=args.silence_thresh_delta,
             min_silence_len=args.min_silence_len,
             prefix=stem,
-            extension=suffix.lstrip("."),
         )
     except Exception as e:
         print(f"Error splitting audio: {e}", file=sys.stderr)

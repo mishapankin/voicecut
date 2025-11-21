@@ -99,7 +99,7 @@ def cut_audio_segment(
     to_substr = "" if end is None else f"-to {end}"
 
     ffmpeg = get_ffmpeg_path()
-    cmd = f"{ffmpeg} -i {audio} -ss {begin} {to_substr} -c copy {output}"
+    cmd = f"{ffmpeg} -y -i {audio} -ss {begin} {to_substr} -c copy {output}"
 
     subprocess.run(shlex.split(cmd))
 
@@ -109,16 +109,17 @@ def split_audio_file(
     splits: list[float],
     out_dir: PathLike | str,
     prefix: str = "segment",
-    extension: str = "mp3",
 ) -> list[PathLike]:
     os.makedirs(out_dir, exist_ok=True)
+
+    suffix = Path(audio).suffix
 
     result: list[PathLike] = []
 
     for i, (begin, end) in enumerate(pairwise([0.0] + splits + [None])):
         assert begin is not None
 
-        result_path = Path(out_dir, f"{prefix}_{(i + 1):03}.{extension}")
+        result_path = Path(out_dir, f"{prefix}_{(i + 1):03}{suffix}")
         cut_audio_segment(audio, begin, end, result_path)
 
         result.append(result_path)
@@ -134,7 +135,6 @@ def split_audio_file_by_silence(
     silence_thresh_db: int = -16,  # in dB
     min_silence_len: float = 0.5,  # in seconds
     prefix: str = "segment",
-    extension: str = "mp3",
 ) -> None:
     duration = get_audio_duration(audio)
     silences = detect_silence(
@@ -154,5 +154,4 @@ def split_audio_file_by_silence(
         splits=splits,
         out_dir=out_dir,
         prefix=prefix,
-        extension=extension,
     )
