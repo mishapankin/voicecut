@@ -1,5 +1,4 @@
 from .splitter import split_audio_on_silence
-from pydub import AudioSegment
 
 
 def voicecut_main():
