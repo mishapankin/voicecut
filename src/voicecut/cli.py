@@ -77,7 +77,7 @@ def voicecut_main():
         print(f"Error splitting audio: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Completed splitting the audio")
+    print("Completed splitting the audio")
 
 
 if __name__ == "__main__":
