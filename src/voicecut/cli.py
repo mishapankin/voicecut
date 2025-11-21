@@ -1,11 +1,11 @@
+import argparse
+import sys
+from pathlib import Path
+
 from .splitter import split_audio_file_by_silence
 
 
 def voicecut_main():
-    import argparse
-    import sys
-    from pathlib import Path
-
     parser = argparse.ArgumentParser(
         description="Split audio file on silence into multiple segments."
     )
