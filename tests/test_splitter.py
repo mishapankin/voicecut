@@ -77,7 +77,6 @@ class TestSplitter(unittest.TestCase):
                 out_dir=out_dir,
                 segment_length=60,
                 segment_delta=20,
-                silence_thresh_db=-20,
             )
 
             # Check output files
