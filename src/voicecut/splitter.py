@@ -8,7 +8,7 @@ import subprocess
 from itertools import pairwise
 from os import PathLike
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 
 def get_ffmpeg_path() -> str:
@@ -61,9 +61,13 @@ def detect_silence(
     return list(zip(starts, ends))
 
 
-def detect_mean_volume(
+def detect_volume(
     audio: PathLike | str,
+    mode: Literal["mean", "max", "abs"] = "mean",
 ) -> float:
+    if mode == "abs":
+        return 0.0
+
     ffmpeg = get_ffmpeg_path()
     cmd = f"{ffmpeg} -hide_banner -i {audio} -af  volumedetect -f null -"
 
@@ -71,10 +75,10 @@ def detect_mean_volume(
     output = proc.stderr
 
     volume = [
-        float(m.group(1)) for m in re.finditer(r"mean_volume: (-?[0-9.]+)", output)
+        float(m.group(1)) for m in re.finditer(rf"{mode}_volume: (-?[0-9.]+)", output)
     ]
     if len(volume) != 1:
-        raise RuntimeError("Failed to detect mean_volume")
+        raise RuntimeError("Failed to detect volume")
     return volume[0]
 
 
@@ -148,13 +152,14 @@ def split_audio_file_by_silence(
     audio: PathLike | str,
     out_dir: PathLike | str,
     segment_length: float = 600.0,  # in seconds
+    silence_thresh_mode: Literal["mean", "max", "abs"] = "mean",
     segment_delta: float = 30.0,  # in seconds
     silence_thresh_delta_db: int = -4,  # in dB
     min_silence_len: float = 0.5,  # in seconds
     prefix: str = "segment",
 ) -> None:
     duration = get_audio_duration(audio)
-    volume = detect_mean_volume(audio)
+    volume = detect_volume(audio, silence_thresh_mode)
     silences = detect_silence(
         audio=audio,
         silence_thresh_db=silence_thresh_delta_db + volume,

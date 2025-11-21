@@ -29,6 +29,7 @@ voicecut audio.mp3 [OPTIONS]
 **Options:**
 - `--segment-length FLOAT`: Target segment length in seconds (default: 600)
 - `--segment-delta FLOAT`: Allowed deviation from segment length in seconds (default: 30)
+- `--silence-thresh-mode {mean, max, auto}`: Mode to determine the silence threshold. 'mean' uses the audio's average dBFS, 'max' uses the audio's peak dBFS, and 'abs' treats --silence-thresh-delta as an absolute dBFS value. For 'mean' and 'max', the computed value is adjusted by --silence-thresh-delta; for 'abs' the delta is used directly as the threshold.
 - `--silence-thresh-delta FLOAT`: Silence threshold delta in dB (default: -4)
 - `--min-silence-len FLOAT`: Minimum silence length in seconds (default: 0.5)
 - `--output-dir PATH`: Output directory for split segments (default: current directory)

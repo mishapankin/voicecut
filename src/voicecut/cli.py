@@ -23,6 +23,17 @@ def voicecut_main():
         help="Allowed deviation from segment length in seconds (default: 30)",
     )
     parser.add_argument(
+        "--silence-thresh-mode",
+        choices=["mean", "max", "abs"],
+        default="mean",
+        help=(
+            "Mode to determine the silence threshold. 'mean' uses the audio's average dBFS, "
+            "'max' uses the audio's peak dBFS, and 'abs' treats --silence-thresh-delta "
+            "as an absolute dBFS value. For 'mean' and 'max', the computed value is adjusted by "
+            "--silence-thresh-delta; for 'abs' the delta is used directly as the threshold."
+        ),
+    )
+    parser.add_argument(
         "--silence-thresh-delta",
         type=int,
         default=-4,
@@ -58,6 +69,7 @@ def voicecut_main():
             out_dir=output_dir,
             segment_length=args.segment_length,
             segment_delta=args.segment_delta,
+            silence_thresh_mode=args.silence_thresh_mode,
             silence_thresh_delta_db=args.silence_thresh_delta,
             min_silence_len=args.min_silence_len,
         )
