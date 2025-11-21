@@ -5,11 +5,8 @@ import unittest
 from os import PathLike, chdir
 from pathlib import Path
 
-from voicecut.splitter import (
-    get_audio_duration,
-    get_ffmpeg_path,
-    split_audio_file_by_silence,
-)
+from voicecut.splitter import (get_audio_duration, get_ffmpeg_path,
+                               split_audio_file_by_silence)
 
 
 def generate_tone(

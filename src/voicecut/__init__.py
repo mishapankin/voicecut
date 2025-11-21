@@ -3,5 +3,5 @@ __all__ = [
     "voicecut_main",
 ]
 
-from .splitter import split_audio_file_by_silence
 from .cli import voicecut_main
+from .splitter import split_audio_file_by_silence
